@@ -28,6 +28,8 @@
 # Then `make build` to continue the compilation. Good luck...
 
 
+
+
 cmake_minimum_required(VERSION 3.24)
 include(ExternalProject)
 
@@ -44,13 +46,13 @@ find_package(
         COMPONENTS Interpreter
 )
 
-
+set(FREEBSD_PORTS_REVISION_FOR_CHROMIUM_VERSION ef70968307c637c51aec1fe7e2eda20658dac631)
 ExternalProject_Add(
   freebsd-ports 
   SOURCE_DIR     freebsd-ports
   GIT_REPOSITORY https://github.com/freebsd/freebsd-ports.git
   GIT_SHALLOW    true
-  GIT_TAG        main
+  GIT_TAG        FREEBSD_PORTS_REVISION_FOR_CHROMIUM_VERSION
   CONFIGURE_COMMAND ""
   BUILD_COMMAND ""
   INSTALL_COMMAND ""
@@ -128,7 +130,7 @@ set(CHROMIUM_GIT https://chromium.googlesource.com)
 #   INSTALL_COMMAND ""
 #   )
 
-set(DEVTOOLS_FRONTEND_REVISION 09b09ec03d2fc168046840a2edb8ba667a6008ff)
+set(DEVTOOLS_FRONTEND_REVISION e4d13b251b100b3fdd0c846b94453c0597bc251f)
 ExternalProject_Add(
   devtools-frontend
   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/devtools-frontend/src
@@ -263,7 +265,7 @@ set(ICU_REVISION a622de35ac311c5ad390a7af80724634e5dc61ed)
 #   )
 
 set(ANDROID_GIT https://android.googlesource.com)
-set(PERFETTO_REVISION bb663f9c401914d29e1207171e8a37f410cf5dd2)
+set(PERFETTO_REVISION 1e15d01da5d619ca617dcdd870efe3c35046a89c)
 ExternalProject_Add(
   perfetto
   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/perfetto
@@ -275,7 +277,7 @@ ExternalProject_Add(
   )
 
 set(SKIA_GIT https://skia.googlesource.com)
-set(SKIA_REVISION a5f25943a09f03496ff86380c340968c4a008e31)
+set(SKIA_REVISION c6835e2d5ff641dad9347ce4c2ff79dbc29cf9aa)
 ExternalProject_Add(
   skia
   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/skia
@@ -425,7 +427,7 @@ ExternalProject_Add(
 
 set(WEBRTC_GIT https://webrtc.googlesource.com)
 # # Commit history invalid?
-set(WEBRTC_REVISION 79ba9b0b2b28e49ecc32992ff9163917299beedc)
+set(WEBRTC_REVISION be2786cd2383b7ec5d158add166275d19e246763)
 ExternalProject_Add(
   webrtc
   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/webrtc
@@ -437,7 +439,7 @@ ExternalProject_Add(
   INSTALL_COMMAND ""
   )
 
-set(V8_REVISION 1fbb9881419d2c7c278a6013df6c8ca16344dbd9)
+set(V8_REVISION 7ca8cf1710353b309b30a27873709a2500585ad0)
 ExternalProject_Add(
   v8
   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/v8
