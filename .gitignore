@@ -106,3 +106,15 @@ chromeos
 clank
 codelabs
 codereview.settings
+.clang-format
+.clang-tidy
+.clangd
+.eslintrc.js
+.git-blame-ignore-revs
+.gitattributes
+.gitmodules
+.gn
+.mailmap
+.rustfmt.toml
+.vpython3
+.yapfignore
