@@ -56,6 +56,7 @@ set(toolchain-syspath /usr/local64/)
 set(toolchain-bin ${toolchain-syspath}bin/)
 set(toolchain-lib ${toolchain-syspath}lib/)
 set(toolchain-include ${toolchain-syspath}include/)
+set(rustc-version "rustc 1.71.0 (7bb61853a 2024-07-10")
 
 find_package(Git)
 find_package(
@@ -64,7 +65,7 @@ find_package(
         COMPONENTS Interpreter
 )
 
-set(FREEBSD_PORTS_REVISION_FOR_CHROMIUM_VERSION ef70968307c637c51aec1fe7e2eda20658dac631)
+set(FREEBSD_PORTS_REVISION_FOR_CHROMIUM_VERSION 0792294cb90ce950b6a0d58ddc2f3cd95111b0d6)
 ExternalProject_Add(
   freebsd-ports 
   SOURCE_DIR     freebsd-ports
@@ -149,7 +150,7 @@ set(CHROMIUM_GIT https://chromium.googlesource.com)
 #   INSTALL_COMMAND ""
 #   )
 
-set(DEVTOOLS_FRONTEND_REVISION e4d13b251b100b3fdd0c846b94453c0597bc251f)
+set(DEVTOOLS_FRONTEND_REVISION c963f0c7472f41d9d4c3335fffdab4f9b8da25bb)
 ExternalProject_Add(
   devtools-frontend
   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/devtools-frontend/src
@@ -184,7 +185,7 @@ ExternalProject_Add(
 #   INSTALL_COMMAND ""
 #   )
 
-set(ICU_REVISION a622de35ac311c5ad390a7af80724634e5dc61ed)
+set(ICU_REVISION 98f2494518c2dbb9c488e83e507b070ea5910e95)
   ExternalProject_Add(
   icu
   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/icu
@@ -286,7 +287,7 @@ set(ICU_REVISION a622de35ac311c5ad390a7af80724634e5dc61ed)
 #   )
 
 set(ANDROID_GIT https://android.googlesource.com)
-set(PERFETTO_REVISION 1e15d01da5d619ca617dcdd870efe3c35046a89c)
+set(PERFETTO_REVISION 6aaa8a1fb15659d1b68179e20993e969d9f500f8)
 ExternalProject_Add(
   perfetto
   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/perfetto
@@ -299,7 +300,7 @@ ExternalProject_Add(
   )
 
 set(SKIA_GIT https://skia.googlesource.com)
-set(SKIA_REVISION c6835e2d5ff641dad9347ce4c2ff79dbc29cf9aa)
+set(SKIA_REVISION be621ea04206d8fae23952783d1d588d6ce0d9b3)
 ExternalProject_Add(
   skia
   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/skia
@@ -450,7 +451,7 @@ ExternalProject_Add(
 
 set(WEBRTC_GIT https://webrtc.googlesource.com)
 # # Commit history invalid?
-set(WEBRTC_REVISION be2786cd2383b7ec5d158add166275d19e246763)
+set(WEBRTC_REVISION a18e38fed2307edd6382760213fa3ddf199fa181)
 ExternalProject_Add(
   webrtc
   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/webrtc
@@ -463,11 +464,12 @@ ExternalProject_Add(
   INSTALL_COMMAND ""
   )
 
-set(V8_REVISION 7ca8cf1710353b309b30a27873709a2500585ad0)
+set(PROBABLYTOM_V8_GIT https://github.com/probablytom/v8.git)
+set(V8_REVISION cheri_hybrid_12.6.228.21)
 ExternalProject_Add(
   v8
   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/v8
-  GIT_REPOSITORY ${CHROMIUM_GIT}/v8/v8.git
+  GIT_REPOSITORY ${PROBABLYTOM_V8_GIT}
   GIT_TAG        ${V8_REVISION}
   GIT_SHALLOW	 true
   GIT_PROGRESS   true
@@ -513,7 +515,7 @@ set(GN_ARGS_BASE
   enable_perfetto_system_consumer=false
   enable_perfetto_unittests=false
   enable_perfetto_zlib=true
-  enable_rust=false
+  enable_rust=true
   enable_trace_logging=true
   extra_ldflags="-Wl,-znotext,-L${toolchain-lib},-L/usr/local/lib -g -O0"
   fatal_linker_warnings=false
@@ -530,6 +532,8 @@ set(GN_ARGS_BASE
   rtc_enable_libevent=false
   rtc_enable_protobuf=false
   rtc_exclude_audio_processing_module=true
+  rust_sysroot_absolute="${toolchain-syspath}"
+  rustc_version="${rustc-version}"
   symbol_level=2
   target_os="freebsd"
   target_sysroot_dir="${toolchain-sysroot}"
@@ -560,11 +564,13 @@ set(GN_ARGS_BASE
   v8_enable_gdbjit=false # not supported on aarch64!
   v8_enable_fast_torque=false
   v8_enable_i18n_support=false
+  v8_enable_maglev=true
   v8_enable_object_print=true
   v8_enable_sandbox=true
   v8_enable_single_generation=false
   v8_enable_sparkplug=true
   v8_enable_trace_ignition=true
+  v8_enable_turbofan=true
   v8_enable_verify_heap=true
   v8_enable_webassembly=false
   v8_monolithic=false
@@ -576,9 +582,9 @@ set(GN_ARGS_BASE
 # LEGACY, NON-CHERI ARGS
 set(GN_ARGS_LEGACY ${GN_ARGS_BASE}
   custom_toolchain="//v8/tools/toolchain:morello_llvm_legacy_native"
-  extra_cflags="-mabi=aapcs -march=morello -Xclang -morello-vararg=new -I/usr/local/include -I${toolchain-lib} -I/usr/include -I${CMAKE_SOURCE_DIR}/chromium/third_party/perfetto -D_BSD_SOURCE --include sys/types.h -g -O0 -Wno-unused-command-line-argument -Wno-implicit-int-conversion -Wno-thread-safety-analysis -Wno-c++98-compat-extra-semi"
-  extra_cppflags="-mabi=aapcs -march=morello -Xclang -morello-vararg=new -I/usr/local/include -I${toolchain-lib} -I/usr/include -I${CMAKE_SOURCE_DIR}/chromium/third_party/perfetto -D_BSD_SOURCE --include sys/types.h -g -O0 -Wno-unused-command-line-argument -Wno-implicit-int-conversion -Wno-thread-safety-analysis -Wno-c++98-compat-extra-semi"
-  extra_cxxflags="-mabi=aapcs -march=morello -Xclang -morello-vararg=new -I/usr/local/include -I${toolchain-lib} -I/usr/include -I${CMAKE_SOURCE_DIR}/chromium/third_party/perfetto -D_BSD_SOURCE --include sys/types.h -g -O0 -Wno-unused-command-line-argument -Wno-implicit-int-conversion -Wno-thread-safety-analysis -Wno-c++98-compat-extra-semi"
+  extra_cflags="-mabi=aapcs -march=morello -Xclang -morello-vararg=new -I/usr/local/include -I${toolchain-lib} -I/usr/include -I${CMAKE_SOURCE_DIR}/chromium/third_party/perfetto -D_BSD_SOURCE --include sys/types.h -g -O0 -Wno-unknown-warning-option -Wno-unused-command-line-argument -Wno-implicit-int-conversion -Wno-thread-safety-analysis -Wno-c++98-compat-extra-semi"
+  extra_cppflags="-mabi=aapcs -march=morello -Xclang -morello-vararg=new -I/usr/local/include -I${toolchain-lib} -I/usr/include -I${CMAKE_SOURCE_DIR}/chromium/third_party/perfetto -D_BSD_SOURCE --include sys/types.h -g -O0 -Wno-unknown-warning-option -Wno-unused-command-line-argument -Wno-implicit-int-conversion -Wno-thread-safety-analysis -Wno-c++98-compat-extra-semi"
+  extra_cxxflags="-mabi=aapcs -march=morello -Xclang -morello-vararg=new -I/usr/local/include -I${toolchain-lib} -I/usr/include -I${CMAKE_SOURCE_DIR}/chromium/third_party/perfetto -D_BSD_SOURCE --include sys/types.h -g -O0 -Wno-unknown-warning-option -Wno-unused-command-line-argument -Wno-implicit-int-conversion -Wno-thread-safety-analysis -Wno-c++98-compat-extra-semi"
   host_toolchain="//v8/tools/toolchain:morello_llvm_legacy_native"
   #v8_snapshot_toolchain="//v8/tools/toolchain:morello_llvm_legacy_native"
   )
@@ -586,9 +592,9 @@ set(GN_ARGS_LEGACY ${GN_ARGS_BASE}
 # CHERI-SPECIFIC
 set(GN_ARGS ${GN_ARGS_BASE}
   custom_toolchain="//v8/tools/toolchain:morello_llvm_hybrid_native"
-  extra_cflags="-mabi=aapcs -march=morello -Xclang -morello-vararg=new -I/usr/local/include -I${toolchain-lib} -I/usr/include -I${CMAKE_SOURCE_DIR}/chromium/third_party/perfetto -D_BSD_SOURCE --include sys/types.h -g -O0 -DCHERI_HYBRID -DCHERI_PROTECT_GENERATED_CODE -Wno-unused-command-line-argument -Wno-implicit-int-conversion -Wno-thread-safety-analysis -Wno-c++98-compat-extra-semi"
-  extra_cppflags="-mabi=aapcs -march=morello -Xclang -morello-vararg=new -I/usr/local/include -I${toolchain-lib} -I/usr/include -I${CMAKE_SOURCE_DIR}/chromium/third_party/perfetto -D_BSD_SOURCE --include sys/types.h -g -O0 -DCHERI_HYBRID -DCHERI_PROTECT_GENERATED_CODE -Wno-unused-command-line-argument -Wno-implicit-int-conversion -Wno-thread-safety-analysis -Wno-c++98-compat-extra-semi"
-  extra_cxxflags="-mabi=aapcs -march=morello -Xclang -morello-vararg=new -I/usr/local/include -I${toolchain-lib} -I/usr/include -I${CMAKE_SOURCE_DIR}/chromium/third_party/perfetto -D_BSD_SOURCE --include sys/types.h -g -O0 -DCHERI_HYBRID -DCHERI_PROTECT_GENERATED_CODE -Wno-unused-command-line-argument -Wno-implicit-int-conversion -Wno-thread-safety-analysis -Wno-c++98-compat-extra-semi"
+  extra_cflags="-mabi=aapcs -march=morello -Xclang -morello-vararg=new -I/usr/local/include -I${toolchain-lib} -I/usr/include -I${CMAKE_SOURCE_DIR}/chromium/third_party/perfetto -D_BSD_SOURCE --include sys/types.h -g -O0 -DCHERI_HYBRID -DCHERI_PROTECT_GENERATED_CODE -Wno-unknown-warning-option -Wno-unused-command-line-argument -Wno-implicit-int-conversion -Wno-thread-safety-analysis -Wno-c++98-compat-extra-semi"
+  extra_cppflags="-mabi=aapcs -march=morello -Xclang -morello-vararg=new -I/usr/local/include -I${toolchain-lib} -I/usr/include -I${CMAKE_SOURCE_DIR}/chromium/third_party/perfetto -D_BSD_SOURCE --include sys/types.h -g -O0 -DCHERI_HYBRID -DCHERI_PROTECT_GENERATED_CODE -Wno-unknown-warning-option -Wno-unused-command-line-argument -Wno-implicit-int-conversion -Wno-thread-safety-analysis -Wno-c++98-compat-extra-semi"
+  extra_cxxflags="-mabi=aapcs -march=morello -Xclang -morello-vararg=new -I/usr/local/include -I${toolchain-lib} -I/usr/include -I${CMAKE_SOURCE_DIR}/chromium/third_party/perfetto -D_BSD_SOURCE --include sys/types.h -g -O0 -DCHERI_HYBRID -DCHERI_PROTECT_GENERATED_CODE -Wno-unknown-warning-option -Wno-unused-command-line-argument -Wno-implicit-int-conversion -Wno-thread-safety-analysis -Wno-c++98-compat-extra-semi"
   host_toolchain="//v8/tools/toolchain:morello_llvm_hybrid_native"
   #v8_snapshot_toolchain="//v8/tools/toolchain:morello_llvm_hybrid_native"
   )
@@ -612,8 +618,8 @@ add_custom_target(pre-configure ALL
 )
 
 add_custom_target(configure ALL
-  COMMAND if ! grep -q "morello_llvm_hybrid_native" ${v8-dir}/tools/toolchain/BUILD.gn$<SEMICOLON> then printf "\"gcc_toolchain(\\\"morello_llvm_hybrid_native\\\"){cc = \\\"${home-bin}clang-morello\\\"\\ncxx = \\\"${home-bin}clang++-morello\\\"\\nreadelf = \\\"${toolchain-bin}llvm-readelf-morello\\\"\\nnm = \\\"${toolchain-bin}llvm-nm-morello\\\"\\nar = \\\"${toolchain-bin}llvm-ar-morello\\\"\\nld = cxx\\nextra_ldflags=\\\"-Wl,-znotext,-L/lib,-L${toolchain-lib},-L/usr/local/lib -g -O0\\\"\\nextra_cflags = \\\"--target=aarch64-unknown-freebsd -mabi=aapcs -march=morello -Xclang -morello-vararg=new  -I/usr/local/include -I${toolchain-include} -I/usr/include --include sys/types.h -g -O0 -DCHERI_HYBRID -DCHERI_PROTECT_GENERATED_CODE -Wno-unused-command-line-argument -Wno-c++98-compat-extra-semi -Wno-implicit-int-conversion -Wno-thread-safety-analysis\\\"\\nextra_cxxflags = \\\"--target=aarch64-unknown-freebsd -mabi=aapcs -march=morello -Xclang -morello-vararg=new -I/usr/local/include -I${toolchain-include} -I/usr/include -I${CMAKE_SOURCE_DIR}/chromium/third_party/perfetto --include sys/types.h -g -O0 -DCHERI_HYBRID -DCHERI_PROTECT_GENERATED_CODE -Wno-unused-command-line-argument -Wno-c++98-compat-extra-semi -Wno-implicit-int-conversion -Wno-thread-safety-analysis\\\"\\ntoolchain_args = {target_cpu = \\\"arm64\\\"\\ncurrent_cpu = \\\"arm64\\\"\\ncurrent_os = \\\"freebsd\\\"\\nis_clang = true\\nuse_lld = true\\nv8_enable_i18n_support = false\\nsimple_template_names = false}}\"" >> ${v8-dir}/tools/toolchain/BUILD.gn$<SEMICOLON> fi
-  COMMAND if ! grep -q "morello_llvm_legacy_native" ${v8-dir}/tools/toolchain/BUILD.gn$<SEMICOLON> then printf "\"gcc_toolchain(\\\"morello_llvm_legacy_native\\\"){cc = \\\"${home-bin}clang-morello\\\"\\ncxx = \\\"${home-bin}clang++-morello\\\"\\nreadelf = \\\"${toolchain-bin}llvm-readelf-morello\\\"\\nnm = \\\"${toolchain-bin}llvm-nm-morello\\\"\\nar = \\\"${toolchain-bin}llvm-ar-morello\\\"\\nld = cxx\\nextra_ldflags=\\\"-Wl,-znotext,-L/lib,-L${toolchain-lib},-L/usr/local/lib -g -O0\\\"\\nextra_cflags = \\\"--target=aarch64-unknown-freebsd -mabi=aapcs -march=morello -Xclang -morello-vararg=new  -I/usr/local/include -I${toolchain-include} -I/usr/include --include sys/types.h -g -O0 -Wno-unused-command-line-argument -Wno-c++98-compat-extra-semi -Wno-implicit-int-conversion -Wno-thread-safety-analysis\\\"\\nextra_cxxflags = \\\"--target=aarch64-unknown-freebsd -mabi=aapcs -march=morello -Xclang -morello-vararg=new -I/usr/local/include -I${toolchain-include} -I/usr/include -I${CMAKE_SOURCE_DIR}/chromium/third_party/perfetto --include sys/types.h -g -O0 -Wno-unused-command-line-argument -Wno-c++98-compat-extra-semi -Wno-implicit-int-conversion -Wno-thread-safety-analysis\\\"\\ntoolchain_args = {target_cpu = \\\"arm64\\\"\\ncurrent_cpu = \\\"arm64\\\"\\ncurrent_os = \\\"freebsd\\\"\\nis_clang = true\\nuse_lld = true\\nv8_enable_i18n_support = false\\nsimple_template_names = false}}\"" >> ${v8-dir}/tools/toolchain/BUILD.gn$<SEMICOLON> fi
+	COMMAND if ! grep -q "morello_llvm_hybrid_native" ${v8-dir}/tools/toolchain/BUILD.gn$<SEMICOLON> then printf "\"gcc_toolchain(\\\"morello_llvm_hybrid_native\\\"){cc = \\\"${home-bin}clang-morello\\\"\\ncxx = \\\"${home-bin}clang++-morello\\\"\\nreadelf = \\\"${toolchain-bin}llvm-readelf-morello\\\"\\nnm = \\\"${toolchain-bin}llvm-nm-morello\\\"\\nar = \\\"${toolchain-bin}llvm-ar-morello\\\"\\nld = cxx\\nextra_ldflags=\\\"-Wl,-znotext,-L/lib,-L${toolchain-lib},-L/usr/local/lib -g -O0\\\"\\nextra_cflags = \\\"--target=aarch64-unknown-freebsd -mabi=aapcs -march=morello -Xclang -morello-vararg=new  -I/usr/local/include -I${toolchain-include} -I/usr/include --include sys/types.h -g -O0 -DCHERI_HYBRID -DCHERI_PROTECT_GENERATED_CODE -Wno-unknown-warning-option -Wno-unused-command-line-argument -Wno-c++98-compat-extra-semi -Wno-implicit-int-conversion -Wno-thread-safety-analysis\\\"\\nextra_cxxflags = \\\"--target=aarch64-unknown-freebsd -mabi=aapcs -march=morello -Xclang -morello-vararg=new -I/usr/local/include -I${toolchain-include} -I/usr/include -I${CMAKE_SOURCE_DIR}/chromium/third_party/perfetto --include sys/types.h -g -O0 -DCHERI_HYBRID -DCHERI_PROTECT_GENERATED_CODE -Wno-unknown-warning-option -Wno-unused-command-line-argument -Wno-c++98-compat-extra-semi -Wno-implicit-int-conversion -Wno-thread-safety-analysis\\\"\\ntoolchain_args = {target_cpu = \\\"arm64\\\"\\ncurrent_cpu = \\\"arm64\\\"\\ncurrent_os = \\\"freebsd\\\"\\nis_clang = true\\nuse_lld = true\\nv8_enable_i18n_support = false\\nsimple_template_names = false}}\"" >> ${v8-dir}/tools/toolchain/BUILD.gn$<SEMICOLON> fi
+	COMMAND if ! grep -q "morello_llvm_legacy_native" ${v8-dir}/tools/toolchain/BUILD.gn$<SEMICOLON> then printf "\"gcc_toolchain(\\\"morello_llvm_legacy_native\\\"){cc = \\\"${home-bin}clang-morello\\\"\\ncxx = \\\"${home-bin}clang++-morello\\\"\\nreadelf = \\\"${toolchain-bin}llvm-readelf-morello\\\"\\nnm = \\\"${toolchain-bin}llvm-nm-morello\\\"\\nar = \\\"${toolchain-bin}llvm-ar-morello\\\"\\nld = cxx\\nextra_ldflags=\\\"-Wl,-znotext,-L/lib,-L${toolchain-lib},-L/usr/local/lib -g -O0\\\"\\nextra_cflags = \\\"--target=aarch64-unknown-freebsd -mabi=aapcs -march=morello -Xclang -morello-vararg=new  -I/usr/local/include -I${toolchain-include} -I/usr/include --include sys/types.h -g -O0 -Wno-unknown-warning-option -Wno-unused-command-line-argument -Wno-c++98-compat-extra-semi -Wno-implicit-int-conversion -Wno-thread-safety-analysis\\\"\\nextra_cxxflags = \\\"--target=aarch64-unknown-freebsd -mabi=aapcs -march=morello -Xclang -morello-vararg=new -I/usr/local/include -I${toolchain-include} -I/usr/include -I${CMAKE_SOURCE_DIR}/chromium/third_party/perfetto --include sys/types.h -g -O0 -Wno-unknown-warning-option -Wno-unused-command-line-argument -Wno-c++98-compat-extra-semi -Wno-implicit-int-conversion -Wno-thread-safety-analysis\\\"\\ntoolchain_args = {target_cpu = \\\"arm64\\\"\\ncurrent_cpu = \\\"arm64\\\"\\ncurrent_os = \\\"freebsd\\\"\\nis_clang = true\\nuse_lld = true\\nv8_enable_i18n_support = false\\nsimple_template_names = false}}\"" >> ${v8-dir}/tools/toolchain/BUILD.gn$<SEMICOLON> fi
   COMMAND gn gen ${gn-dir} --args='${GN_ARGS}'
   COMMAND gn gen ${gn-dir}-legacy --args='${GN_ARGS_LEGACY}'
   #COMMAND cp `which protoc` ${gn-dir}/protoc
