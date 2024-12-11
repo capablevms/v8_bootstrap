@@ -477,7 +477,7 @@ ExternalProject_Add(
 
 set(WEBRTC_GIT https://webrtc.googlesource.com)
 # WARNING!! The commit history for webrtc seems to get rewritten sometimes. Update at your peril...!
-set(WEBRTC_REVISION f237dc146debcfde3d70038c2b66f71bfea8d24b)
+set(WEBRTC_REVISION b47cd6fbe315690756f2f03e7658d4e26fe27b1e)
 ExternalProject_Add(
   webrtc
   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/webrtc
@@ -638,6 +638,7 @@ add_custom_target(hooks ALL
   COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/build/util/lastchange.py -o ${CMAKE_SOURCE_DIR}/build/util/LASTCHANGE
   )
 
+set(DOLLAR "$")
 add_custom_target(pre-configure ALL
   #COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/gn/bootstrap/bootstrap.py --debug --no-clean --no-rebuild --skip-generate-buildfiles
   COMMAND sed -i "" -e 's/\\\/usr\\\/local[^6]\\/\/usr\\\/local64/g' ${CMAKE_SOURCE_DIR}/base/base_paths_posix.cc
@@ -646,6 +647,7 @@ add_custom_target(pre-configure ALL
   COMMAND sed -i "" -e 's/\\\/usr\\\/local[^6]/\\\/usr\\\/local64/g' ${CMAKE_SOURCE_DIR}/third_party/test_fonts/fontconfig/BUILD.gn
   COMMAND sed -i "" -e 's/\\\/usr\\\/local[^6]/\\\/usr\\\/local64/g' ${CMAKE_SOURCE_DIR}/third_party/vulkan-deps/vulkan-loader/src/BUILD.gn
   COMMAND sed -i "" -e 's/\\\/usr\\\/local[^6]/\\\/usr\\\/local64/g' ${CMAKE_SOURCE_DIR}/third_party/vulkan-deps/vulkan-loader/src/loader/vk_loader_platform.h
+  COMMAND find freebsd-ports/www/chromium/files/patch-* -type f -exec sed -i \"\" -e 's/\.{LOCALBASE}/\\\/usr\\\/local64/g' {} '\;'
   COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/build/linux/unbundle/replace_gn_files.py --system-libraries dav1d flac fontconfig freetype harfbuzz-ng icu libdrm libevent libpng libusb libwebp libxml libxslt openh264 opus snappy || false
   COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/third_party/ffmpeg/chromium/config/Chrome/linux/ ${CMAKE_SOURCE_DIR}/third_party/ffmpeg/chromium/config/Chrome/freebsd
   COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/third_party/ffmpeg/chromium/config/Chromium/linux/ ${CMAKE_SOURCE_DIR}/third_party/ffmpeg/chromium/config/Chromium/freesbd
