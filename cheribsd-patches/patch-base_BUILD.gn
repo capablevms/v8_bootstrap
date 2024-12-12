@@ -1,0 +1,11 @@
+--- base/BUILD.gn.orig	2024-12-12 11:09:15.427539000 +0000
++++ base/BUILD.gn	2024-12-12 11:07:48.378372000 +0000
+@@ -1061,7 +1061,7 @@
+     "//build/config/compiler:compiler_buildflags",
+     "//third_party/modp_b64",
+   ]
+-  if (!is_nacl) {
++  if (!is_nacl && current_os != "freebsd") {
+     # Used by metrics/crc32, except on NaCl builds.
+     deps += [ "//third_party/zlib" ]
+   }

@@ -518,17 +518,30 @@ ExternalProject_Add(
 
 
 add_custom_target(apply-patches ALL
+	COMMAND find freebsd-ports/www/chromium/files/patch-* -type f -exec sed -i \"\" -e 's/\.{LOCALBASE}/\\\/usr\\\/local64/g' {} '\;'
 	COMMAND find ${CMAKE_BINARY_DIR}/freebsd-ports/www/chromium/files -type f -name 'patch-*' -print0 | xargs -t -0 -n 1 patch -p0 -u -N -f -d ${CMAKE_SOURCE_DIR} -i || true
 	COMMAND find ${CMAKE_BINARY_DIR}/cheribsd-patches -type f -name 'patch-*' -print0 | xargs -t -0 -n 1 patch -p0 -u -N -d ${CMAKE_SOURCE_DIR} -i || true
+)
+
+add_custom_target(apply-v8-patches
+	COMMAND find ${CMAKE_BINARY_DIR}/freebsd-ports/www/chromium/files -type f -name 'patch-v8_*' -print0 | xargs -t -0 -n 1 patch -p0 -u -N -f -d ${CMAKE_SOURCE_DIR} -i || true
+	COMMAND find ${CMAKE_BINARY_DIR}/cheribsd-patches -type f -name 'patch-v8_*' -print0 | xargs -t -0 -n 1 patch -p0 -u -N -d ${CMAKE_SOURCE_DIR} -i || true
+)
+
+add_custom_target(undo-patches
+	COMMAND find ${CMAKE_BINARY_DIR}/freebsd-ports/www/chromium/files -type f -name 'patch-*' -print0 | xargs -t -0 -n 1 patch -R -p0 -u -N -f -d ${CMAKE_SOURCE_DIR} -i || true
+	COMMAND find ${CMAKE_BINARY_DIR}/cheribsd-patches -type f -name 'patch-*' -print0 | xargs -t -0 -n 1 patch -R -p0 -u -N -d ${CMAKE_SOURCE_DIR} -i || true
 )
 
   #set(ccache_distcc_configuration DISTCC_CMDLIST=/home/probablytom/.distcc/cmdlist DISTCC_VERBOSE=1 DISTCC_LOG=~/.distcc/logfile DISTCC_HOSTS=\\"@bencher15.soft-dev.org/64\\" CCACHE_PREFIX=distcc CCACHE_SLOPPINESS=time_macros ccache)
   set(ccache_distcc_configuration DISTCC_CMDLIST=/home/probablytom/.distcc/cmdlist DISTCC_VERBOSE=1 DISTCC_LOG=~/.distcc/logfile DISTCC_HOSTS=\\"@bencher15.soft-dev.org/64\\" CCACHE_SLOPPINESS=time_macros ccache)
 
 set(GN_ARGS_BASE
+  arm_use_neon=false
   cc_wrapper="${ccache_distcc_configuration}"
   clang_base_path="${toolchain-syspath}"
   clang_use_chrome_plugins=false
+  clang_version="-morello"
   enable_backup_ref_ptr_support=false
   enable_base_tracing=false
   enable_dav1d_decoder=false
@@ -540,7 +553,7 @@ set(GN_ARGS_BASE
   enable_perfetto_trace_processor_sqlite=true
   enable_perfetto_system_consumer=false
   enable_perfetto_unittests=false
-  enable_perfetto_zlib=true
+  enable_perfetto_zlib=false
   enable_rust=true
   enable_trace_logging=true
   extra_ldflags="-Wl,-znotext,-L${toolchain-lib},-L/usr/local/lib -g -O0"
@@ -549,10 +562,13 @@ set(GN_ARGS_BASE
   is_clang=true
   is_component_build=false
   is_debug=true
+  #libyuv_build_with_neon=false
   optional_trace_events_enabled=false
   perfetto_use_system_protobuf=true
   perfetto_use_system_sqlite=true
+  perfetto_use_system_zlib=true
   rtc_build_libevent=true
+  rtc_build_with_neon=false
   rtc_disable_trace_events=true
   rtc_enable_google_benchmarks=false
   rtc_enable_libevent=false
@@ -565,16 +581,16 @@ set(GN_ARGS_BASE
   target_sysroot_dir="${toolchain-sysroot}"
   target_cpu="arm64"
   treat_warnings_as_errors=false
-  use_allocator_shim=false
+  #use_allocator_shim=false
   use_aura=true
   use_debug_fission=true
   use_custom_libcxx=false
-  use_cxx17=true
+  #use_cxx17=true
   use_lld=true
   use_libinput=false
-  use_partition_alloc=true
-  use_partition_alloc_as_malloc=false
-  use_perfetto_client_library=true
+  #use_partition_alloc=true
+  #use_partition_alloc_as_malloc=false
+  #use_perfetto_client_library=true
   use_perfetto_trace_processor=false
   use_sysroot=false
   use_system_freetype=false
@@ -606,6 +622,7 @@ set(GN_ARGS_BASE
   v8_optimized_debug=false
   v8_use_external_startup_data=false
   v8_use_perfetto=false
+  v8_use_zlib=false
   )
 
 IF(${CHERI_ENABLED})
@@ -616,7 +633,7 @@ IF(${CHERI_ENABLED})
 	  extra_cppflags="-mabi=aapcs -march=morello -Xclang -morello-vararg=new -I/usr/local/include -I${toolchain-lib} -I/usr/include -I${CMAKE_SOURCE_DIR}/chromium/third_party/perfetto -D_BSD_SOURCE --include sys/types.h -g -O0 -DCHERI_HYBRID -DCHERI_PROTECT_GENERATED_CODE -Wno-unknown-warning-option -Wno-unused-command-line-argument -Wno-implicit-int-conversion -Wno-thread-safety-analysis -Wno-c++98-compat-extra-semi"
 	  extra_cxxflags="-mabi=aapcs -march=morello -Xclang -morello-vararg=new -I/usr/local/include -I${toolchain-lib} -I/usr/include -I${CMAKE_SOURCE_DIR}/chromium/third_party/perfetto -D_BSD_SOURCE --include sys/types.h -g -O0 -DCHERI_HYBRID -DCHERI_PROTECT_GENERATED_CODE -Wno-unknown-warning-option -Wno-unused-command-line-argument -Wno-implicit-int-conversion -Wno-thread-safety-analysis -Wno-c++98-compat-extra-semi"
 	  host_toolchain="//v8/tools/toolchain:morello_llvm_hybrid_native"
-	  host_system_allocator_toolchain="//v8/tools/toolchain:morello_llvm_hybrid_native"
+	  #host_system_allocator_toolchain="//v8/tools/toolchain:morello_llvm_hybrid_native"
 	  #v8_snapshot_toolchain="//v8/tools/toolchain:morello_llvm_hybrid_native"
 	  )
 ELSE()
@@ -627,7 +644,7 @@ ELSE()
 	  extra_cppflags="-mabi=aapcs -march=morello -Xclang -morello-vararg=new -I/usr/local/include -I${toolchain-lib} -I/usr/include -I${CMAKE_SOURCE_DIR}/chromium/third_party/perfetto -D_BSD_SOURCE --include sys/types.h -g -O0 -Wno-unknown-warning-option -Wno-unused-command-line-argument -Wno-implicit-int-conversion -Wno-thread-safety-analysis -Wno-c++98-compat-extra-semi"
 	  extra_cxxflags="-mabi=aapcs -march=morello -Xclang -morello-vararg=new -I/usr/local/include -I${toolchain-lib} -I/usr/include -I${CMAKE_SOURCE_DIR}/chromium/third_party/perfetto -D_BSD_SOURCE --include sys/types.h -g -O0 -Wno-unknown-warning-option -Wno-unused-command-line-argument -Wno-implicit-int-conversion -Wno-thread-safety-analysis -Wno-c++98-compat-extra-semi"
 	  host_toolchain="//v8/tools/toolchain:morello_llvm_legacy_native"
-	  host_system_allocator_toolchain="//v8/tools/toolchain:morello_llvm_legacy_native"
+	  #host_system_allocator_toolchain="//v8/tools/toolchain:morello_llvm_legacy_native"
 	  #v8_snapshot_toolchain="//v8/tools/toolchain:morello_llvm_legacy_native"
 	  )
 ENDIF()
@@ -647,7 +664,6 @@ add_custom_target(pre-configure ALL
   COMMAND sed -i "" -e 's/\\\/usr\\\/local[^6]/\\\/usr\\\/local64/g' ${CMAKE_SOURCE_DIR}/third_party/test_fonts/fontconfig/BUILD.gn
   COMMAND sed -i "" -e 's/\\\/usr\\\/local[^6]/\\\/usr\\\/local64/g' ${CMAKE_SOURCE_DIR}/third_party/vulkan-deps/vulkan-loader/src/BUILD.gn
   COMMAND sed -i "" -e 's/\\\/usr\\\/local[^6]/\\\/usr\\\/local64/g' ${CMAKE_SOURCE_DIR}/third_party/vulkan-deps/vulkan-loader/src/loader/vk_loader_platform.h
-  COMMAND find freebsd-ports/www/chromium/files/patch-* -type f -exec sed -i \"\" -e 's/\.{LOCALBASE}/\\\/usr\\\/local64/g' {} '\;'
   COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/build/linux/unbundle/replace_gn_files.py --system-libraries dav1d flac fontconfig freetype harfbuzz-ng icu libdrm libevent libpng libusb libwebp libxml libxslt openh264 opus snappy || false
   COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/third_party/ffmpeg/chromium/config/Chrome/linux/ ${CMAKE_SOURCE_DIR}/third_party/ffmpeg/chromium/config/Chrome/freebsd
   COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/third_party/ffmpeg/chromium/config/Chromium/linux/ ${CMAKE_SOURCE_DIR}/third_party/ffmpeg/chromium/config/Chromium/freesbd
@@ -719,7 +735,7 @@ add_custom_target(build
 )
 
 add_custom_target(helloworld
-  COMMAND clang++-morello -I. -Iv8 -Iv8/include v8/samples/hello-world.cc -o helloworld -fno-rtti -lv8 -lv8_libbase -lv8_libplatform -L${CMAKE_SOURCE_DIR}/${gn-dir}/obj/ -L${CMAKE_SOURCE_DIR}/${gn-dir} -pthread -std=c++17 -g -O0 -DV8_COMPRESS_POINTERS -DV8_ENABLE_SANDBOX
+  COMMAND clang++-morello -I. -Iv8 -Iv8/include v8/samples/hello-world.cc -o helloworld -fno-rtti -lv8 -lv8_libbase -lv8_libplatform -L${CMAKE_SOURCE_DIR}/${gn-dir}/obj/ -L${CMAKE_SOURCE_DIR}/${gn-dir} -pthread -std=c++20 -g -O0 -DV8_COMPRESS_POINTERS -DV8_ENABLE_SANDBOX
   COMMAND rm -f ${so-dir}/libv8.so
   COMMAND ln -s ${CMAKE_SOURCE_DIR}/${gn-dir}/libv8.so ${so-dir}/libv8.so
   COMMAND rm -f ${so-dir}/libv8_libbase.so
@@ -729,7 +745,7 @@ add_custom_target(helloworld
 )
 
 add_custom_target(d8
-  COMMAND ninja -C ${gn-dir} d8
+  COMMAND ninja -C ${gn-dir} -v d8
   COMMAND rm -f ${so-dir}/libv8.so
   COMMAND ln -s ${CMAKE_SOURCE_DIR}/${gn-dir}/libv8.so ${so-dir}/libv8.so
   COMMAND rm -f ${so-dir}/libv8_libbase.so
