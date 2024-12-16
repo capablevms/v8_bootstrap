@@ -47,11 +47,11 @@ include(ExternalProject)
 
 project(hybrid-v8)
 
-SET(WEBASSEMBLY_ENABLED false      CACHE BOOL   "Whether to enable V8's sandbox")
+SET(WEBASSEMBLY_ENABLED true      CACHE BOOL   "Whether to enable V8's sandbox")
 SET(SANDBOX_ENABLED     true       CACHE BOOL   "Whether to enable V8's sandbox")
 SET(CHERI_ENABLED       true       CACHE BOOL   "Whether CHERI is enabled, in hybrid mode")
-SET(JS_SHELL            "v8_shell" CACHE STRING "The name of the executable for the current preferred JS shell") 
-SET(gn-target           v8         CACHE STRING "Build target for ninja")
+SET(JS_SHELL            "d8"       CACHE STRING "The name of the executable for the current preferred JS shell") 
+SET(gn-target           d8         CACHE STRING "Build target for ninja")
 
 IF(${WEBASSEMBLY_ENABLED})
 	SET(gn-dir-webassembly-suffix "")
@@ -103,421 +103,422 @@ ExternalProject_Add(
   BUILD_COMMAND ""
   INSTALL_COMMAND ""
 )
+set_target_properties(freebsd-ports PROPERTIES EXCLUDE_FROM_ALL TRUE)
+ 
+## Install dependencies (DEPS file)
+#
+#set(CHROMIUM_GIT https://chromium.googlesource.com)
+#
+## set(ANGLE_REVISION 1cedd773c14a6afc7223fb12426f9b575c8ae4c8)
+## ExternalProject_Add(
+##   angle
+##   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/angle
+##   GIT_REPOSITORY ${CHROMIUM_GIT}/angle/angle.git
+##   GIT_TAG        ${ANGLE_REVISION}
+##   CONFIGURE_COMMAND ""
+##   BUILD_COMMAND ""
+##   INSTALL_COMMAND ""
+##   )
+#
+## set(FLAC_REVISION 689da3a7ed50af7448c3f1961d1791c7c1d9c85c)
+## ExternalProject_Add(
+##   flac
+##   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/flac
+##   GIT_REPOSITORY ${CHROMIUM_GIT}/chromium/deps/flac.git
+##   GIT_TAG        ${FLAC_REVISION}
+##   CONFIGURE_COMMAND ""
+##   BUILD_COMMAND ""
+##   INSTALL_COMMAND ""
+##   )
+## 
+## set(BORINGSSL_GIT https://boringssl.googlesource.com)
+## set(BORINGSSL_REVISION 689da3a7ed50af7448c3f1961d1791c7c1d9c85c)
+## ExternalProject_Add(
+##   boringssl
+##   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/boringssl/src
+##   GIT_REPOSITORY ${BORINGSSL_GIT}/boringssl.git
+##   GIT_TAG        ${BORING_REVISION}
+##   CONFIGURE_COMMAND ""
+##   BUILD_COMMAND ""
+##   INSTALL_COMMAND ""
+##   )
+## 
+## set(CATAPULT_REVISION 4f43388d908cb2c5e3cf788a9018be512b6c7653)
+## ExternalProject_Add(
+##   catapult
+##   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/catapult
+##   GIT_REPOSITORY ${CHROMIUM_GIT}/catapult.git
+##   GIT_TAG        ${CATAPULT_REVISION}
+##   CONFIGURE_COMMAND ""
+##   BUILD_COMMAND ""
+##   INSTALL_COMMAND ""
+##   )
+## 
+## set(CLD_3_REVISION b48dc46512566f5a2d41118c8c1116c4f96dc661)
+## ExternalProject_Add(
+##   cld_3
+##   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/cld_3/src
+##   GIT_REPOSITORY ${CHROMIUM_GIT}/external/github.com/google/cld_3.git
+##   GIT_TAG        ${CLD_3_REVISION}
+##   CONFIGURE_COMMAND ""
+##   BUILD_COMMAND ""
+##   INSTALL_COMMAND ""
+##   )
+## 
+## set(DAWN_GIT https://dawn.googlesource.com)
+## set(DAWN_REVISION 53c41d10d68009d74e953a780befa66ef4b59498)
+## ExternalProject_Add(
+##   dawn
+##   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/dawn
+##   GIT_REPOSITORY ${DAWN_GIT}/dawn.git
+##   GIT_TAG        ${DAWN_REVISION}
+##   CONFIGURE_COMMAND ""
+##   BUILD_COMMAND ""
+##   INSTALL_COMMAND ""
+##   )
+#
+#set(DEVTOOLS_FRONTEND_REVISION 47f04a536265028feb1254a3663853e0ce526455)
+#ExternalProject_Add(
+#  devtools-frontend
+#  SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/devtools-frontend/src
+#  GIT_REPOSITORY ${CHROMIUM_GIT}/devtools/devtools-frontend.git
+#  GIT_TAG        ${DEVTOOLS_FRONTEND_REVISION}
+#  GIT_PROGRESS   true
+#  CONFIGURE_COMMAND ""
+#  BUILD_COMMAND ""
+#  INSTALL_COMMAND ""
+#  )
+#
+## 
+## set(FFMPEG_REVISION 8d21d41d8bec5c0b266ee305d1a708dc5c23b594)
+## ExternalProject_Add(
+##   ffmpeg
+##   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/ffmpeg
+##   GIT_REPOSITORY ${CHROMIUM_GIT}/chromium/third_party/ffmpeg.git
+##   GIT_TAG        ${FFMPEG_REVISION}
+##   CONFIGURE_COMMAND ""
+##   BUILD_COMMAND ""
+##   INSTALL_COMMAND ""
+##   )
+## 
+## set(FONTCONFIG_REVISION 06929a556fdc39c8fe12965b69070c8df520a33e)
+##   ExternalProject_Add(
+##   fontconfig
+##   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/fontconfig/src
+##   GIT_REPOSITORY ${CHROMIUM_GIT}/external/fontconfig.git
+##   GIT_TAG        ${FONTCONFIG_REVISION}
+##   CONFIGURE_COMMAND ""
+##   BUILD_COMMAND ""
+##   INSTALL_COMMAND ""
+##   )
+#
+#set(ICU_REVISION 9408c6fd4a39e6fef0e1c4077602e1c83b15f3fb)
+#  ExternalProject_Add(
+#  icu
+#  SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/icu
+#  GIT_REPOSITORY ${CHROMIUM_GIT}/chromium/deps/icu.git
+#  GIT_TAG        ${ICU_REVISION}
+#  GIT_PROGRESS   true
+#  CONFIGURE_COMMAND ""
+#  BUILD_COMMAND ""
+#  INSTALL_COMMAND ""
+#  )
+#
+## set(LIBJPEG_TURBO_REVISION aa4075f116e4312537d0d3e9dbd5e31096539f94)
+## ExternalProject_Add(
+##   libjpeg_turbo
+##   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/libjpeg_turbo
+##   GIT_REPOSITORY ${CHROMIUM_GIT}/chromium/deps/libjpeg_turbo.git
+##   GIT_TAG        ${LIBJPEG_TURBO_REVISION}
+##   CONFIGURE_COMMAND ""
+##   BUILD_COMMAND ""
+##   INSTALL_COMMAND ""
+##   )
+## 
+## set(LIBPHONENUMBER_REVISION 140dfeb81b753388e8a672900fb7a971e9a0d362)
+## ExternalProject_Add(
+##   libphonenumber
+##   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/libphonenumber/dist
+##   GIT_REPOSITORY ${CHROMIUM_GIT}/external/libphonenumber.git
+##   GIT_TAG        ${LIBPHONENUMBER_REVISION}
+##   CONFIGURE_COMMAND ""
+##   BUILD_COMMAND ""
+##   INSTALL_COMMAND ""
+##   )
+## 
+## set(LIBSYNC_REVISION f4f4387b6bf2387efbcfd1453af4892e8982faf6)
+## ExternalProject_Add(
+##   libsync
+##   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/libsync/src
+##   GIT_REPOSITORY ${CHROMIUM_GIT}/aosp/platform/system/core/libsync.git
+##   GIT_TAG        ${LIBSYNC_REVISION}
+##   CONFIGURE_COMMAND ""
+##   BUILD_COMMAND ""
+##   INSTALL_COMMAND ""
+##   )
+## 
+## set(LIBWEBP_REVISION fd7b5d48464475408d32d2611bdb6947d4246b97)
+## ExternalProject_Add(
+##   libwebp
+##   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/libwebp/src
+##   GIT_REPOSITORY ${CHROMIUM_GIT}/webm/libwebp.git
+##   GIT_TAG        ${LIBWEBP_REVISION}
+##   CONFIGURE_COMMAND ""
+##   BUILD_COMMAND ""
+##   INSTALL_COMMAND ""
+##   )
+## 
+## set(LIBYUV_REVISION dcbe0820709c274beb4624588d1aa14b25557d62)
+## ExternalProject_Add(
+##   libyuv
+##   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/libyuv
+##   GIT_REPOSITORY ${CHROMIUM_GIT}/libyuv/libyuv.git
+##   GIT_TAG        ${LIBYUV_REVISION}
+##   CONFIGURE_COMMAND ""
+##   BUILD_COMMAND ""
+##   INSTALL_COMMAND ""
+##   )
+## 
+## set(NASM_REVISION 7fc833e889d1afda72c06220e5bed8fb43b2e5ce)
+## ExternalProject_Add(
+##   nasm
+##   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/nasm
+##   GIT_REPOSITORY ${CHROMIUM_GIT}/chromium/deps/nasm.git
+##   GIT_TAG        ${NASM_REVISION}
+##   CONFIGURE_COMMAND ""
+##   BUILD_COMMAND ""
+##   INSTALL_COMMAND ""
+##   )
+## 
+## set(OPENSCREEN_REVISION d052a5556a78aa4463852e29919d616b47237842)
+## ExternalProject_Add(
+##   openscreen 
+##   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/openscreen/src
+##   GIT_REPOSITORY ${CHROMIUM_GIT}/openscreen
+##   GIT_TAG        ${OPENSCREEN_REVISION}
+##   CONFIGURE_COMMAND ""
+##   BUILD_COMMAND ""
+##   INSTALL_COMMAND ""
+##   )
+## 
+## set(PDFIUM_GIT https://pdfium.googlesource.com)
+## set(PDFIUM_REVISION c739696a25a3b515e208cafa2e944d377ee37307)
+## ExternalProject_Add(
+##   pdfium
+##   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/pdfium
+##   GIT_REPOSITORY ${PDFIUM_GIT}/pdfium.git
+##   GIT_TAG        ${PDFIUM_REVISION}
+##   CONFIGURE_COMMAND ""
+##   BUILD_COMMAND ""
+##   INSTALL_COMMAND ""
+##   )
+#
+#set(ANDROID_GIT https://android.googlesource.com)
+#set(PERFETTO_REVISION 077d742d9f9738a0453e408560a283a7514c9e8e)
+#ExternalProject_Add(
+#  perfetto
+#  SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/perfetto
+#  GIT_REPOSITORY ${ANDROID_GIT}/platform/external/perfetto.git
+#  GIT_TAG        ${PERFETTO_REVISION}
+#  GIT_PROGRESS   true
+#  CONFIGURE_COMMAND ""
+#  BUILD_COMMAND ""
+#  INSTALL_COMMAND ""
+#  )
+#
+#set(SKIA_GIT https://skia.googlesource.com)
+#set(SKIA_REVISION 8bd493b850f1a75482af8f30cb492cd70645498c)
+#ExternalProject_Add(
+#  skia
+#  SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/skia
+#  GIT_REPOSITORY ${SKIA_GIT}/skia.git
+#  GIT_TAG        ${SKIA_REVISION}
+#  GIT_PROGRESS   true
+#  CONFIGURE_COMMAND ""
+#  BUILD_COMMAND ""
+#  INSTALL_COMMAND ""
+#  )
+#
+## # skipped patch: tools/gn/build_gen.py
+## # skipped patch: tools/gn/src/gn_version.h
+## 
+## set(SQLITE_REVISION f6752b7ed1fe3cc1491c0c47ec5804ee2bd0e59b)
+## ExternalProject_Add(
+##   sqlite
+##   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/sqlite/src
+##   GIT_REPOSITORY ${CHROMIUM_GIT}/chromium/deps/sqlite.git
+##   GIT_TAG        ${SQLITE_REVISION}
+##   CONFIGURE_COMMAND ""
+##   BUILD_COMMAND ""
+##   INSTALL_COMMAND ""
+##   )
+## 
+## set(SWIFTSHADER_GIT https://swiftshader.googlesource.com)
+## set(SWIFTSHADER_REVISION f549d5e6c6635ec8b75fb544a6bdc9f48bfb1dd3)
+## ExternalProject_Add(
+##   swiftshader
+##   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/swiftshader
+##   GIT_REPOSITORY ${SWIFTSHADER_GIT}/SwiftShader.git
+##   GIT_TAG        ${SWIFTSHADER_REVISION}
+##   CONFIGURE_COMMAND ""
+##   BUILD_COMMAND ""
+##   INSTALL_COMMAND ""
+##   )
+## 
+## set(VULKANDEPS_REVISION 94574e5c2e14614aae7251f26a5492fec966abf0)
+## ExternalProject_Add(
+##   vulkan-deps
+##   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/vulkan-deps
+##   GIT_REPOSITORY ${CHROMIUM_GIT}/vulkan-deps
+##   GIT_TAG        ${VULKANDEPS_REVISION}
+##   CONFIGURE_COMMAND ""
+##   BUILD_COMMAND ""
+##   INSTALL_COMMAND ""
+##   )
+## 
+## set(GLSLANG_REVISION a5bf69936ddebd45370c2e2c392b4b6f26296bad)
+## ExternalProject_Add(
+##   glslang
+##   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/vulkan-deps/glslang/src
+##   GIT_REPOSITORY ${CHROMIUM_GIT}/external/github.com/KhronosGroup/glslang
+##   GIT_TAG        ${GLSLANG_REVISION}
+##   CONFIGURE_COMMAND ""
+##   BUILD_COMMAND ""
+##   INSTALL_COMMAND ""
+##   )
+## 
+## set(SPIRV_CROSS_REVISION 12542fc6fc05000e04742daf93892a0b10edbe80)
+## ExternalProject_Add(
+##   spirv-cross
+##   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/vulkan-deps/spirv-cross/src
+##   GIT_REPOSITORY ${CHROMIUM_GIT}/external/github.com/KhronosGroup/SPIRV-Cross
+##   GIT_TAG        ${SPIRV_CROSS_REVISION}
+##   CONFIGURE_COMMAND ""
+##   BUILD_COMMAND ""
+##   INSTALL_COMMAND ""
+##   )
+## 
+## set(SPIRV_HEADERS_REVISION bdbfd019be6952fd8fa9bd5606a8798a7530c853)
+## ExternalProject_Add(
+##   spirv-headers
+##   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/vulkan-deps/spirv-headers/src
+##   GIT_REPOSITORY ${CHROMIUM_GIT}/external/github.com/KhronosGroup/SPIRV-Headers
+##   GIT_TAG        ${SPIRV_HEADERS_REVISION}
+##   CONFIGURE_COMMAND ""
+##   BUILD_COMMAND ""
+##   INSTALL_COMMAND ""
+##   )
+## 
+## set(SPIRV_TOOLS_REVISION e7c6084fd1d6d6f5ac393e842728d8be309688ca)
+## ExternalProject_Add(
+##   spirv-tools
+##   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/vulkan-deps/spirv-tools/src
+##   GIT_REPOSITORY ${CHROMIUM_GIT}/external/github.com/KhronosGroup/SPIRV-Tools
+##   GIT_TAG        ${SPIRV_TOOLS_REVISION}
+##   CONFIGURE_COMMAND ""
+##   BUILD_COMMAND ""
+##   INSTALL_COMMAND ""
+##   )
+## 
+## set(VULKAN_HEADERS_REVISION 9e61870ecbd32514113b467e0a0c46f60ed222c7)
+## ExternalProject_Add(
+##   vulkan-headers
+##   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/vulkan-deps/vulkan-headers/src
+##   GIT_REPOSITORY ${CHROMIUM_GIT}/external/github.com/KhronosGroup/Vulkan-Headers
+##   GIT_TAG        ${VULKAN_HEADERS_REVISION}
+##   CONFIGURE_COMMAND ""
+##   BUILD_COMMAND ""
+##   INSTALL_COMMAND ""
+##   )
+## 
+## set(VULKAN_LOADER_REVISION b95d065ec567f862ab5baa85ab99ecb1f8979fbc)
+## ExternalProject_Add(
+##   vulkan-loader
+##   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/vulkan-deps/vulkan-loader/src
+##   GIT_REPOSITORY ${CHROMIUM_GIT}/external/github.com/KhronosGroup/Vulkan-Loader
+##   GIT_TAG        ${VULKAN_LOADER_REVISION}
+##   CONFIGURE_COMMAND ""
+##   BUILD_COMMAND ""
+##   INSTALL_COMMAND ""
+##   )
+## 
+## set(VULKAN_TOOLS_REVISION 80b010b1e1b08c1f092fb2bfa337faadf8ea1ba3)
+## ExternalProject_Add(
+##   vulkan-tools
+##   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/vulkan-deps/vulkan-tools/src
+##   GIT_REPOSITORY ${CHROMIUM_GIT}/external/github.com/KhronosGroup/Vulkan-Tools
+##   GIT_TAG        ${VULKAN_TOOLS_REVISION}
+##   CONFIGURE_COMMAND ""
+##   BUILD_COMMAND ""
+##   INSTALL_COMMAND ""
+##   )
+## 
+## set(VULKAN_VALIDATION_LAYERS_REVISION 414ee5c8fe6ede3ba44d9ca8832ef974f1158cd5)
+## ExternalProject_Add(
+##   vulkan-validation-layers
+##   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/vulkan-deps/vulkan-validation-layers/src
+##   GIT_REPOSITORY ${CHROMIUM_GIT}/external/github.com/KhronosGroup/Vulkan-ValidationLayers
+##   GIT_TAG        ${VULKAN_VALIDATION_LAYERS_REVISION}
+##   CONFIGURE_COMMAND ""
+##   BUILD_COMMAND ""
+##   INSTALL_COMMAND ""
+##   )
+## 
+## set(VULCANMEMORYALLOCATOR_REVISION ebe84bec02c041d28f902da0214bf442743fc907)
+## ExternalProject_Add(
+##   vulkan_memory_allocator
+##   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/vulkan_memory_allocator
+##   GIT_REPOSITORY ${CHROMIUM_GIT}/external/github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator.git
+##   GIT_TAG        ${VULCANMEMORYALLOCATOR_REVISION}
+##   CONFIGURE_COMMAND ""
+##   BUILD_COMMAND ""
+##   INSTALL_COMMAND ""
+##   )
+## 
+#
+#set(WEBRTC_GIT https://webrtc.googlesource.com)
+## WARNING!! The commit history for webrtc seems to get rewritten sometimes. Update at your peril...!
+#set(WEBRTC_REVISION b47cd6fbe315690756f2f03e7658d4e26fe27b1e)
+#ExternalProject_Add(
+#  webrtc
+#  SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/webrtc
+#  GIT_REPOSITORY ${WEBRTC_GIT}/src.git
+#  GIT_TAG        main
+#  GIT_SHALLOW	 true
+#  GIT_PROGRESS   true
+#  CONFIGURE_COMMAND ""
+#  BUILD_COMMAND ""
+#  INSTALL_COMMAND ""
+#  )
+#
+#set(PROBABLYTOM_V8_GIT https://github.com/probablytom/v8.git)
+#set(V8_REVISION compartment_switching_around_control_flow_integrity)
+#ExternalProject_Add(
+#  v8
+#  SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/v8
+#  GIT_REPOSITORY ${PROBABLYTOM_V8_GIT}
+#  GIT_TAG        ${V8_REVISION}
+#  GIT_SHALLOW	 true
+#  GIT_PROGRESS   true
+#  CONFIGURE_COMMAND ""
+#  BUILD_COMMAND ""
+#  INSTALL_COMMAND ""
+#  )
+#
+#set(XDGUTILS_REVISION cb54d9db2e535ee4ef13cc91b65a1e2741a94a44)
+#ExternalProject_Add(
+#  xdg-utils
+#  SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/xdg-utils
+#  GIT_REPOSITORY ${CHROMIUM_GIT}/chromium/deps/xdg-utils.git
+#  GIT_TAG        ${XDGUTILS_REVISION}
+#  GIT_PROGRESS   true
+#  CONFIGURE_COMMAND ""
+#  BUILD_COMMAND ""
+#  INSTALL_COMMAND ""
+#  )
 
-# Install dependencies (DEPS file)
 
-set(CHROMIUM_GIT https://chromium.googlesource.com)
-
-# set(ANGLE_REVISION 1cedd773c14a6afc7223fb12426f9b575c8ae4c8)
-# ExternalProject_Add(
-#   angle
-#   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/angle
-#   GIT_REPOSITORY ${CHROMIUM_GIT}/angle/angle.git
-#   GIT_TAG        ${ANGLE_REVISION}
-#   CONFIGURE_COMMAND ""
-#   BUILD_COMMAND ""
-#   INSTALL_COMMAND ""
-#   )
-
-# set(FLAC_REVISION 689da3a7ed50af7448c3f1961d1791c7c1d9c85c)
-# ExternalProject_Add(
-#   flac
-#   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/flac
-#   GIT_REPOSITORY ${CHROMIUM_GIT}/chromium/deps/flac.git
-#   GIT_TAG        ${FLAC_REVISION}
-#   CONFIGURE_COMMAND ""
-#   BUILD_COMMAND ""
-#   INSTALL_COMMAND ""
-#   )
-# 
-# set(BORINGSSL_GIT https://boringssl.googlesource.com)
-# set(BORINGSSL_REVISION 689da3a7ed50af7448c3f1961d1791c7c1d9c85c)
-# ExternalProject_Add(
-#   boringssl
-#   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/boringssl/src
-#   GIT_REPOSITORY ${BORINGSSL_GIT}/boringssl.git
-#   GIT_TAG        ${BORING_REVISION}
-#   CONFIGURE_COMMAND ""
-#   BUILD_COMMAND ""
-#   INSTALL_COMMAND ""
-#   )
-# 
-# set(CATAPULT_REVISION 4f43388d908cb2c5e3cf788a9018be512b6c7653)
-# ExternalProject_Add(
-#   catapult
-#   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/catapult
-#   GIT_REPOSITORY ${CHROMIUM_GIT}/catapult.git
-#   GIT_TAG        ${CATAPULT_REVISION}
-#   CONFIGURE_COMMAND ""
-#   BUILD_COMMAND ""
-#   INSTALL_COMMAND ""
-#   )
-# 
-# set(CLD_3_REVISION b48dc46512566f5a2d41118c8c1116c4f96dc661)
-# ExternalProject_Add(
-#   cld_3
-#   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/cld_3/src
-#   GIT_REPOSITORY ${CHROMIUM_GIT}/external/github.com/google/cld_3.git
-#   GIT_TAG        ${CLD_3_REVISION}
-#   CONFIGURE_COMMAND ""
-#   BUILD_COMMAND ""
-#   INSTALL_COMMAND ""
-#   )
-# 
-# set(DAWN_GIT https://dawn.googlesource.com)
-# set(DAWN_REVISION 53c41d10d68009d74e953a780befa66ef4b59498)
-# ExternalProject_Add(
-#   dawn
-#   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/dawn
-#   GIT_REPOSITORY ${DAWN_GIT}/dawn.git
-#   GIT_TAG        ${DAWN_REVISION}
-#   CONFIGURE_COMMAND ""
-#   BUILD_COMMAND ""
-#   INSTALL_COMMAND ""
-#   )
-
-set(DEVTOOLS_FRONTEND_REVISION 47f04a536265028feb1254a3663853e0ce526455)
-ExternalProject_Add(
-  devtools-frontend
-  SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/devtools-frontend/src
-  GIT_REPOSITORY ${CHROMIUM_GIT}/devtools/devtools-frontend.git
-  GIT_TAG        ${DEVTOOLS_FRONTEND_REVISION}
-  GIT_PROGRESS   true
-  CONFIGURE_COMMAND ""
-  BUILD_COMMAND ""
-  INSTALL_COMMAND ""
-  )
-
-# 
-# set(FFMPEG_REVISION 8d21d41d8bec5c0b266ee305d1a708dc5c23b594)
-# ExternalProject_Add(
-#   ffmpeg
-#   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/ffmpeg
-#   GIT_REPOSITORY ${CHROMIUM_GIT}/chromium/third_party/ffmpeg.git
-#   GIT_TAG        ${FFMPEG_REVISION}
-#   CONFIGURE_COMMAND ""
-#   BUILD_COMMAND ""
-#   INSTALL_COMMAND ""
-#   )
-# 
-# set(FONTCONFIG_REVISION 06929a556fdc39c8fe12965b69070c8df520a33e)
-#   ExternalProject_Add(
-#   fontconfig
-#   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/fontconfig/src
-#   GIT_REPOSITORY ${CHROMIUM_GIT}/external/fontconfig.git
-#   GIT_TAG        ${FONTCONFIG_REVISION}
-#   CONFIGURE_COMMAND ""
-#   BUILD_COMMAND ""
-#   INSTALL_COMMAND ""
-#   )
-
-set(ICU_REVISION 9408c6fd4a39e6fef0e1c4077602e1c83b15f3fb)
-  ExternalProject_Add(
-  icu
-  SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/icu
-  GIT_REPOSITORY ${CHROMIUM_GIT}/chromium/deps/icu.git
-  GIT_TAG        ${ICU_REVISION}
-  GIT_PROGRESS   true
-  CONFIGURE_COMMAND ""
-  BUILD_COMMAND ""
-  INSTALL_COMMAND ""
-  )
-
-# set(LIBJPEG_TURBO_REVISION aa4075f116e4312537d0d3e9dbd5e31096539f94)
-# ExternalProject_Add(
-#   libjpeg_turbo
-#   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/libjpeg_turbo
-#   GIT_REPOSITORY ${CHROMIUM_GIT}/chromium/deps/libjpeg_turbo.git
-#   GIT_TAG        ${LIBJPEG_TURBO_REVISION}
-#   CONFIGURE_COMMAND ""
-#   BUILD_COMMAND ""
-#   INSTALL_COMMAND ""
-#   )
-# 
-# set(LIBPHONENUMBER_REVISION 140dfeb81b753388e8a672900fb7a971e9a0d362)
-# ExternalProject_Add(
-#   libphonenumber
-#   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/libphonenumber/dist
-#   GIT_REPOSITORY ${CHROMIUM_GIT}/external/libphonenumber.git
-#   GIT_TAG        ${LIBPHONENUMBER_REVISION}
-#   CONFIGURE_COMMAND ""
-#   BUILD_COMMAND ""
-#   INSTALL_COMMAND ""
-#   )
-# 
-# set(LIBSYNC_REVISION f4f4387b6bf2387efbcfd1453af4892e8982faf6)
-# ExternalProject_Add(
-#   libsync
-#   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/libsync/src
-#   GIT_REPOSITORY ${CHROMIUM_GIT}/aosp/platform/system/core/libsync.git
-#   GIT_TAG        ${LIBSYNC_REVISION}
-#   CONFIGURE_COMMAND ""
-#   BUILD_COMMAND ""
-#   INSTALL_COMMAND ""
-#   )
-# 
-# set(LIBWEBP_REVISION fd7b5d48464475408d32d2611bdb6947d4246b97)
-# ExternalProject_Add(
-#   libwebp
-#   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/libwebp/src
-#   GIT_REPOSITORY ${CHROMIUM_GIT}/webm/libwebp.git
-#   GIT_TAG        ${LIBWEBP_REVISION}
-#   CONFIGURE_COMMAND ""
-#   BUILD_COMMAND ""
-#   INSTALL_COMMAND ""
-#   )
-# 
-# set(LIBYUV_REVISION dcbe0820709c274beb4624588d1aa14b25557d62)
-# ExternalProject_Add(
-#   libyuv
-#   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/libyuv
-#   GIT_REPOSITORY ${CHROMIUM_GIT}/libyuv/libyuv.git
-#   GIT_TAG        ${LIBYUV_REVISION}
-#   CONFIGURE_COMMAND ""
-#   BUILD_COMMAND ""
-#   INSTALL_COMMAND ""
-#   )
-# 
-# set(NASM_REVISION 7fc833e889d1afda72c06220e5bed8fb43b2e5ce)
-# ExternalProject_Add(
-#   nasm
-#   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/nasm
-#   GIT_REPOSITORY ${CHROMIUM_GIT}/chromium/deps/nasm.git
-#   GIT_TAG        ${NASM_REVISION}
-#   CONFIGURE_COMMAND ""
-#   BUILD_COMMAND ""
-#   INSTALL_COMMAND ""
-#   )
-# 
-# set(OPENSCREEN_REVISION d052a5556a78aa4463852e29919d616b47237842)
-# ExternalProject_Add(
-#   openscreen 
-#   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/openscreen/src
-#   GIT_REPOSITORY ${CHROMIUM_GIT}/openscreen
-#   GIT_TAG        ${OPENSCREEN_REVISION}
-#   CONFIGURE_COMMAND ""
-#   BUILD_COMMAND ""
-#   INSTALL_COMMAND ""
-#   )
-# 
-# set(PDFIUM_GIT https://pdfium.googlesource.com)
-# set(PDFIUM_REVISION c739696a25a3b515e208cafa2e944d377ee37307)
-# ExternalProject_Add(
-#   pdfium
-#   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/pdfium
-#   GIT_REPOSITORY ${PDFIUM_GIT}/pdfium.git
-#   GIT_TAG        ${PDFIUM_REVISION}
-#   CONFIGURE_COMMAND ""
-#   BUILD_COMMAND ""
-#   INSTALL_COMMAND ""
-#   )
-
-set(ANDROID_GIT https://android.googlesource.com)
-set(PERFETTO_REVISION 077d742d9f9738a0453e408560a283a7514c9e8e)
-ExternalProject_Add(
-  perfetto
-  SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/perfetto
-  GIT_REPOSITORY ${ANDROID_GIT}/platform/external/perfetto.git
-  GIT_TAG        ${PERFETTO_REVISION}
-  GIT_PROGRESS   true
-  CONFIGURE_COMMAND ""
-  BUILD_COMMAND ""
-  INSTALL_COMMAND ""
-  )
-
-set(SKIA_GIT https://skia.googlesource.com)
-set(SKIA_REVISION 8bd493b850f1a75482af8f30cb492cd70645498c)
-ExternalProject_Add(
-  skia
-  SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/skia
-  GIT_REPOSITORY ${SKIA_GIT}/skia.git
-  GIT_TAG        ${SKIA_REVISION}
-  GIT_PROGRESS   true
-  CONFIGURE_COMMAND ""
-  BUILD_COMMAND ""
-  INSTALL_COMMAND ""
-  )
-
-# # skipped patch: tools/gn/build_gen.py
-# # skipped patch: tools/gn/src/gn_version.h
-# 
-# set(SQLITE_REVISION f6752b7ed1fe3cc1491c0c47ec5804ee2bd0e59b)
-# ExternalProject_Add(
-#   sqlite
-#   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/sqlite/src
-#   GIT_REPOSITORY ${CHROMIUM_GIT}/chromium/deps/sqlite.git
-#   GIT_TAG        ${SQLITE_REVISION}
-#   CONFIGURE_COMMAND ""
-#   BUILD_COMMAND ""
-#   INSTALL_COMMAND ""
-#   )
-# 
-# set(SWIFTSHADER_GIT https://swiftshader.googlesource.com)
-# set(SWIFTSHADER_REVISION f549d5e6c6635ec8b75fb544a6bdc9f48bfb1dd3)
-# ExternalProject_Add(
-#   swiftshader
-#   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/swiftshader
-#   GIT_REPOSITORY ${SWIFTSHADER_GIT}/SwiftShader.git
-#   GIT_TAG        ${SWIFTSHADER_REVISION}
-#   CONFIGURE_COMMAND ""
-#   BUILD_COMMAND ""
-#   INSTALL_COMMAND ""
-#   )
-# 
-# set(VULKANDEPS_REVISION 94574e5c2e14614aae7251f26a5492fec966abf0)
-# ExternalProject_Add(
-#   vulkan-deps
-#   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/vulkan-deps
-#   GIT_REPOSITORY ${CHROMIUM_GIT}/vulkan-deps
-#   GIT_TAG        ${VULKANDEPS_REVISION}
-#   CONFIGURE_COMMAND ""
-#   BUILD_COMMAND ""
-#   INSTALL_COMMAND ""
-#   )
-# 
-# set(GLSLANG_REVISION a5bf69936ddebd45370c2e2c392b4b6f26296bad)
-# ExternalProject_Add(
-#   glslang
-#   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/vulkan-deps/glslang/src
-#   GIT_REPOSITORY ${CHROMIUM_GIT}/external/github.com/KhronosGroup/glslang
-#   GIT_TAG        ${GLSLANG_REVISION}
-#   CONFIGURE_COMMAND ""
-#   BUILD_COMMAND ""
-#   INSTALL_COMMAND ""
-#   )
-# 
-# set(SPIRV_CROSS_REVISION 12542fc6fc05000e04742daf93892a0b10edbe80)
-# ExternalProject_Add(
-#   spirv-cross
-#   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/vulkan-deps/spirv-cross/src
-#   GIT_REPOSITORY ${CHROMIUM_GIT}/external/github.com/KhronosGroup/SPIRV-Cross
-#   GIT_TAG        ${SPIRV_CROSS_REVISION}
-#   CONFIGURE_COMMAND ""
-#   BUILD_COMMAND ""
-#   INSTALL_COMMAND ""
-#   )
-# 
-# set(SPIRV_HEADERS_REVISION bdbfd019be6952fd8fa9bd5606a8798a7530c853)
-# ExternalProject_Add(
-#   spirv-headers
-#   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/vulkan-deps/spirv-headers/src
-#   GIT_REPOSITORY ${CHROMIUM_GIT}/external/github.com/KhronosGroup/SPIRV-Headers
-#   GIT_TAG        ${SPIRV_HEADERS_REVISION}
-#   CONFIGURE_COMMAND ""
-#   BUILD_COMMAND ""
-#   INSTALL_COMMAND ""
-#   )
-# 
-# set(SPIRV_TOOLS_REVISION e7c6084fd1d6d6f5ac393e842728d8be309688ca)
-# ExternalProject_Add(
-#   spirv-tools
-#   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/vulkan-deps/spirv-tools/src
-#   GIT_REPOSITORY ${CHROMIUM_GIT}/external/github.com/KhronosGroup/SPIRV-Tools
-#   GIT_TAG        ${SPIRV_TOOLS_REVISION}
-#   CONFIGURE_COMMAND ""
-#   BUILD_COMMAND ""
-#   INSTALL_COMMAND ""
-#   )
-# 
-# set(VULKAN_HEADERS_REVISION 9e61870ecbd32514113b467e0a0c46f60ed222c7)
-# ExternalProject_Add(
-#   vulkan-headers
-#   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/vulkan-deps/vulkan-headers/src
-#   GIT_REPOSITORY ${CHROMIUM_GIT}/external/github.com/KhronosGroup/Vulkan-Headers
-#   GIT_TAG        ${VULKAN_HEADERS_REVISION}
-#   CONFIGURE_COMMAND ""
-#   BUILD_COMMAND ""
-#   INSTALL_COMMAND ""
-#   )
-# 
-# set(VULKAN_LOADER_REVISION b95d065ec567f862ab5baa85ab99ecb1f8979fbc)
-# ExternalProject_Add(
-#   vulkan-loader
-#   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/vulkan-deps/vulkan-loader/src
-#   GIT_REPOSITORY ${CHROMIUM_GIT}/external/github.com/KhronosGroup/Vulkan-Loader
-#   GIT_TAG        ${VULKAN_LOADER_REVISION}
-#   CONFIGURE_COMMAND ""
-#   BUILD_COMMAND ""
-#   INSTALL_COMMAND ""
-#   )
-# 
-# set(VULKAN_TOOLS_REVISION 80b010b1e1b08c1f092fb2bfa337faadf8ea1ba3)
-# ExternalProject_Add(
-#   vulkan-tools
-#   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/vulkan-deps/vulkan-tools/src
-#   GIT_REPOSITORY ${CHROMIUM_GIT}/external/github.com/KhronosGroup/Vulkan-Tools
-#   GIT_TAG        ${VULKAN_TOOLS_REVISION}
-#   CONFIGURE_COMMAND ""
-#   BUILD_COMMAND ""
-#   INSTALL_COMMAND ""
-#   )
-# 
-# set(VULKAN_VALIDATION_LAYERS_REVISION 414ee5c8fe6ede3ba44d9ca8832ef974f1158cd5)
-# ExternalProject_Add(
-#   vulkan-validation-layers
-#   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/vulkan-deps/vulkan-validation-layers/src
-#   GIT_REPOSITORY ${CHROMIUM_GIT}/external/github.com/KhronosGroup/Vulkan-ValidationLayers
-#   GIT_TAG        ${VULKAN_VALIDATION_LAYERS_REVISION}
-#   CONFIGURE_COMMAND ""
-#   BUILD_COMMAND ""
-#   INSTALL_COMMAND ""
-#   )
-# 
-# set(VULCANMEMORYALLOCATOR_REVISION ebe84bec02c041d28f902da0214bf442743fc907)
-# ExternalProject_Add(
-#   vulkan_memory_allocator
-#   SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/vulkan_memory_allocator
-#   GIT_REPOSITORY ${CHROMIUM_GIT}/external/github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator.git
-#   GIT_TAG        ${VULCANMEMORYALLOCATOR_REVISION}
-#   CONFIGURE_COMMAND ""
-#   BUILD_COMMAND ""
-#   INSTALL_COMMAND ""
-#   )
-# 
-
-set(WEBRTC_GIT https://webrtc.googlesource.com)
-# WARNING!! The commit history for webrtc seems to get rewritten sometimes. Update at your peril...!
-set(WEBRTC_REVISION b47cd6fbe315690756f2f03e7658d4e26fe27b1e)
-ExternalProject_Add(
-  webrtc
-  SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/webrtc
-  GIT_REPOSITORY ${WEBRTC_GIT}/src.git
-  GIT_TAG        main
-  GIT_SHALLOW	 true
-  GIT_PROGRESS   true
-  CONFIGURE_COMMAND ""
-  BUILD_COMMAND ""
-  INSTALL_COMMAND ""
-  )
-
-set(PROBABLYTOM_V8_GIT https://github.com/probablytom/v8.git)
-set(V8_REVISION compartment_switching_around_control_flow_integrity)
-ExternalProject_Add(
-  v8
-  SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/v8
-  GIT_REPOSITORY ${PROBABLYTOM_V8_GIT}
-  GIT_TAG        ${V8_REVISION}
-  GIT_SHALLOW	 true
-  GIT_PROGRESS   true
-  CONFIGURE_COMMAND ""
-  BUILD_COMMAND ""
-  INSTALL_COMMAND ""
-  )
-
-set(XDGUTILS_REVISION cb54d9db2e535ee4ef13cc91b65a1e2741a94a44)
-ExternalProject_Add(
-  xdg-utils
-  SOURCE_DIR	 ${CMAKE_SOURCE_DIR}/third_party/xdg-utils
-  GIT_REPOSITORY ${CHROMIUM_GIT}/chromium/deps/xdg-utils.git
-  GIT_TAG        ${XDGUTILS_REVISION}
-  GIT_PROGRESS   true
-  CONFIGURE_COMMAND ""
-  BUILD_COMMAND ""
-  INSTALL_COMMAND ""
-  )
-
-
-add_custom_target(apply-patches ALL
+add_custom_target(apply-patches
 	COMMAND find freebsd-ports/www/chromium/files/patch-* -type f -exec sed -i \"\" -e 's/\.{LOCALBASE}/\\\/usr\\\/local64/g' {} '\;'
 	COMMAND find ${CMAKE_BINARY_DIR}/freebsd-ports/www/chromium/files -type f -name 'patch-*' -print0 | xargs -t -0 -n 1 patch -p0 -u -N -f -d ${CMAKE_SOURCE_DIR} -i || true
 	COMMAND find ${CMAKE_BINARY_DIR}/cheribsd-patches -type f -name 'patch-*' -print0 | xargs -t -0 -n 1 patch -p0 -u -N -d ${CMAKE_SOURCE_DIR} -i || true
@@ -656,7 +657,7 @@ add_custom_target(hooks ALL
   )
 
 set(DOLLAR "$")
-add_custom_target(pre-configure ALL
+add_custom_target(pre-configure
   #COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/gn/bootstrap/bootstrap.py --debug --no-clean --no-rebuild --skip-generate-buildfiles
   COMMAND sed -i "" -e 's/\\\/usr\\\/local[^6]\\/\/usr\\\/local64/g' ${CMAKE_SOURCE_DIR}/base/base_paths_posix.cc
   COMMAND sed -i "" -e 's/\\\/usr\\\/local[^6]/\\\/usr\\\/local64/g' ${CMAKE_SOURCE_DIR}/chrome/common/chrome_paths.cc
@@ -670,7 +671,7 @@ add_custom_target(pre-configure ALL
   #COMMAND sed -i "" -e 's/\\\/usr\\\/local/\\\/usr\\\/local64/g' ${CMAKE_SOURCE_DIR}/third_party/wayland/features.gni
 )
 
-add_custom_target(configure-all ALL
+add_custom_target(configure-all
 	COMMAND cmake . -DWEBASSEMBLY_ENABLED=true -DSANDBOX_ENABLED=true -DCHERI_ENABLED=true
 	COMMAND make configure
 	COMMAND cmake . -DWEBASSEMBLY_ENABLED=true -DSANDBOX_ENABLED=true -DCHERI_ENABLED=false
@@ -712,19 +713,7 @@ ELSE()
 	  )
 ENDIF()
 
-add_custom_target(setup_all_configurations
-	COMMAND cmake . -DSANDBOX_ENABLED=true -DCHERI_ENABLED=true
-	COMMAND make 
-	COMMAND cmake . -DSANDBOX_ENABLED=true -DCHERI_ENABLED=false
-	COMMAND make 
-	COMMAND cmake . -DSANDBOX_ENABLED=false -DCHERI_ENABLED=true
-	COMMAND make 
-	COMMAND cmake . -DSANDBOX_ENABLED=false -DCHERI_ENABLED=false
-	COMMAND make 
-	COMMAND cmake . -DSANDBOX_ENABLED=${SANDBOX_ENABLED} -DCHERI_ENABLED=${CHERI_ENABLED} # Restore cmake generated files from current configuration for next `make` command
-)
-
-add_custom_target(build
+add_custom_target(build ALL
   COMMAND ninja -C ${gn-dir} ${gn-target}
   COMMAND rm -f ${so-dir}/libv8.so
   COMMAND ln -s ${CMAKE_SOURCE_DIR}/${gn-dir}/libv8.so ${so-dir}/libv8.so
