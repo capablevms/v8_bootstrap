@@ -32,6 +32,7 @@ git submodule update --recommend-shallow --recursive chromium
 
 # Add freebsd-ports and apply patches
 cp CMakeLists.txt chromium/CMakeLists.txt
+cp grab_dep.sh chromium/grab_dep.sh
 cp -r cheribsd-patches chromium/cheribsd-patches
 cd chromium
 cmake .
