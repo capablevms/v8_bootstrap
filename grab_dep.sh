@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # Tool to set up dependancies at the right commit.
 # To be run from chromium's dir.
 # Takes 1 arg: the path to the dependancy.
