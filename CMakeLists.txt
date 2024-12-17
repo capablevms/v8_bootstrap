@@ -534,6 +534,12 @@ add_custom_target(undo-patches
 	COMMAND find ${CMAKE_BINARY_DIR}/cheribsd-patches -type f -name 'patch-*' -print0 | xargs -t -0 -n 1 patch -R -p0 -u -N -d ${CMAKE_SOURCE_DIR} -i || true
 )
 
+add_custom_target(reset-entire-project
+	COMMAND git submodule foreach --recursive \"git restore . && git clean -f\"
+	COMMAND git restore .
+	COMMAND git clean -f
+)
+
   #set(ccache_distcc_configuration DISTCC_CMDLIST=/home/probablytom/.distcc/cmdlist DISTCC_VERBOSE=1 DISTCC_LOG=~/.distcc/logfile DISTCC_HOSTS=\\"@bencher15.soft-dev.org/64\\" CCACHE_PREFIX=distcc CCACHE_SLOPPINESS=time_macros ccache)
   set(ccache_distcc_configuration DISTCC_CMDLIST=/home/probablytom/.distcc/cmdlist DISTCC_VERBOSE=1 DISTCC_LOG=~/.distcc/logfile DISTCC_HOSTS=\\"@bencher15.soft-dev.org/64\\" CCACHE_SLOPPINESS=time_macros ccache)
 
