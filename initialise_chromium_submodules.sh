@@ -16,10 +16,10 @@
 git submodule update --init --depth=1 --recommend-shallow chromium
 cd chromium
 
-git submodule set-url v8 https://github.com/probablytom/v8
+git submodule set-url v8 git@github.com:probablytom/v8
 
 # List of submodules we have to initialise. We avoid initialising everything to avoid pulling unneccesary deps below
-for submod in 'third_party/devtools-frontend/src' 'third_party/icu' 'third_party/perfetto' 'third_party/skia' 'third_party/webrtc' 'third_party/xdg-utils' 'v8';
+for submod in 'third_party/angle' 'third_party/devtools-frontend/src' 'third_party/icu' 'third_party/perfetto' 'third_party/skia' 'third_party/vulkan-deps' 'third_party/webrtc' 'third_party/xdg-utils' 'v8';
 do
 	git submodule init $submod
 done
