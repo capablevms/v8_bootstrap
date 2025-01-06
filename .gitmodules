@@ -1,3 +1,6 @@
 [submodule "chromium"]
 	path = chromium
 	url = git@github.com:probablytom/chromium
+[submodule "gclient_conf"]
+	path = gclient_conf
+	url = git@github.com:chromium-cheri/gclient_conf

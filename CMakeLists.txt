@@ -534,6 +534,11 @@ add_custom_target(undo-patches
 	COMMAND find ${CMAKE_BINARY_DIR}/cheribsd-patches -type f -name 'patch-*' -print0 | xargs -t -0 -n 1 patch -R -p0 -u -N -d ${CMAKE_SOURCE_DIR} -i || true
 )
 
+add_custom_target(clean-orig-files
+	COMMAND git submodule foreach --recursive find . -type f -name *.orig -delete
+	COMMAND find . -type f -name *.orig -delete
+)
+
 add_custom_target(reset-entire-project
 	COMMAND git submodule foreach --recursive \"git restore . && git clean -f\"
 	COMMAND git restore .
@@ -665,6 +670,7 @@ add_custom_target(hooks ALL
 set(DOLLAR "$")
 add_custom_target(pre-configure
   #COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/gn/bootstrap/bootstrap.py --debug --no-clean --no-rebuild --skip-generate-buildfiles
+  COMMAND echo "checkout_google_benchmark = false" > build/config/gclient_args.gni
   COMMAND sed -i "" -e 's/\\\/usr\\\/local[^6]\\/\/usr\\\/local64/g' ${CMAKE_SOURCE_DIR}/base/base_paths_posix.cc
   COMMAND sed -i "" -e 's/\\\/usr\\\/local[^6]/\\\/usr\\\/local64/g' ${CMAKE_SOURCE_DIR}/chrome/common/chrome_paths.cc
   COMMAND sed -i "" -e 's/\\\/usr\\\/local[^6]/\\\/usr\\\/local64/g' ${CMAKE_SOURCE_DIR}/third_party/fontconfig/include/config.h
